@@ -64,7 +64,21 @@ app.delete('/delete/:id);
 
     app.post('/bookings', async (req, res) => {
       const booking = req.body
-      console.log(booking);
+      const query={
+         appointmentDate:booking.appointmentDate,
+         email:booking.email,
+         treatmentName:booking.treatmentName
+
+      }
+    const booked=await bookingCollection.find(query).toArray();
+
+    if(booked.length){
+    const messege=`you have already booked ${booking.appointmentDate} on this date`
+    return res.send({acknowledged:false,messege});
+    }
+
+
+     
       const result = await bookingCollection.insertOne(booking);
       res.send(result);
     })
@@ -79,24 +93,6 @@ app.delete('/delete/:id);
   }
 }
 run().catch(console.dir);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
